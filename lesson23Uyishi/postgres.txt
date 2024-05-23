@@ -1,0 +1,16 @@
+delete -bu table dagi malumot ni ochirishda ishaltiladi
+ delete from table_nomi where condition
+update -bu tableni malumotni o'zgartirishda ishaltiladi
+
+update table_nomi set column_nomi ="qanaqadir nom" wherecondition
+group by -bu qanaqadir columnni guruxlash uchun shlatiladi
+
+select column_nomi1 from table_nomi where condition 
+
+joinlar - bu inner,left,right,full join lar mavjud bu tablelarni bo'lashda ishaltiladi
+
+inner join -bu ikkita table dagi ha shart to'gri kelib boshmaslarni chiqaradi
+rigth join -bu ikkita table dagi ha shart to'gri kelib  birinchi  tabledagi boshmaslarni chiqaradi
+left join -bu ikkita table dagi ha shart to'gri kelib  ikkinchi  tabledagi boshmaslarni chiqaradi
+full join -bu ikkita table dagi ha shart to'gri kelib  birinchi va ikkinchi   tabledagi boshmaslari ham bo'shlari  chiqaradi
+order by - bu sort laydi desc bu teskari qiladi
