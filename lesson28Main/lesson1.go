@@ -11,6 +11,9 @@ func main() {
 		panic(err)
 	}
 	postgres.NewStudentRepository(db)
+
+	// uztoz bu student table va course table referance qilingan many to many qilib shunining uchun course cruddida course_student table shu crudlar bajariladi
+
 	//Read
 
 	//studentInfo := postgres.NewStudentRepository(db)
