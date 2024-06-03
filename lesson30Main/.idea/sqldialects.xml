@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/query.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/storage/postgres/CustomerRepositoryCrud.go" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/storage/postgres/ProductRepositoryCrud.go" dialect="GenericSQL" />
+  </component>
+</project>
