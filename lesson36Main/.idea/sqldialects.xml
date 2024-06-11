@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/query/query.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/storage/postgres/Company.go" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/storage/postgres/Interview.go" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/storage/postgres/recruiter.go" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/storage/postgres/resume.go" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/storage/postgres/user.go" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/storage/postgres/vacancy.go" dialect="GenericSQL" />
+  </component>
+</project>
