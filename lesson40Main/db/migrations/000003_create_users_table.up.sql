@@ -1,1 +1,0 @@
-insert into students(id,name) values (12,"hasan")
