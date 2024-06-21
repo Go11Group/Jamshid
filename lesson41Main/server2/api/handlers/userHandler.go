@@ -4,113 +4,161 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	_ "github.com/gin-gonic/gin"
 	"my_project/model"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 /* bu yerda create user qiladi    */
-func (handle *Handler) CreateUser(gn *gin.Context) {
+func (handle *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	user := model.User{}
-	err := gn.BindJSON(&user) // blindjson - bu body kelgan malumotni jsonga parse qilib
+	err := json.NewDecoder(r.Body).Decode(&user) // blindjson - bu body kelgan malumotni jsonga parse qilib
 	if err != nil {
-		BadRequest(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 	}
 	userJson, err := json.Marshal(&user)
 	if err != nil {
 
-		BadRequest(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 		return
 	}
 	s, err := http.NewRequest(http.MethodPost, "http://localhost:8080/api/user/create", bytes.NewBuffer(userJson))
 	if err != nil {
 
-		ErrorResponse(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 		return
 	}
 	//err = handle.UserRepo.CreateUser(user) // create user sql -query code ga otadi  user struct ti berib yuboriladi
-	client := http.Client{}
-	response, err := client.Do(s)
+	response, err := handle.client.Do(s)
 	if err != nil {
-		ErrorResponse(gn, err) // agar bazaga saqlansamasa response=Ok
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		} // agar bazaga saqlansamasa response=Ok
 		return
 	}
 	if response.StatusCode == 200 || response.StatusCode == 201 {
-		Ok(gn)
+		_, err := w.Write([]byte("Ok success"))
+		if err != nil {
+			return
+		}
 	} else {
 		fmt.Println("----------", userJson)
 
-		ErrorResponse(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 	}
 
 }
 
 /* bu yerda updated user qiladi */
-func (handle *Handler) UpdateUser(gn *gin.Context) {
+func (handle *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	user := model.User{}
-	err := gn.BindJSON(&user) // blindjson - bu body kelgan malumotni jsonga parse qilib
-	fmt.Println(user)
+	err := json.NewDecoder(r.Body).Decode(&user) // blindjson - bu body kelgan malumotni jsonga parse qilib
 	if err != nil {
 		fmt.Println("+++++++", err)
-		BadRequest(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 	}
 	userJson, err := json.Marshal(&user)
 	if err != nil {
-		BadRequest(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 		return
 	}
-	client := http.Client{}
-	s, err := http.NewRequest(http.MethodPut, fmt.Sprintf("http://localhost:8080/api/user/update/%s", gn.Param("id")), bytes.NewBuffer(userJson))
+	id := strings.TrimPrefix(r.URL.Path, "/api/user/update/")
+	s, err := http.NewRequest(http.MethodPut, fmt.Sprintf("http://localhost:8080/api/user/update/%s", id), bytes.NewBuffer(userJson))
 	//err = handle.UserRepo.UpdateUser(gn.Param("id"), user)
 	if err != nil {
 		fmt.Println("+++++++++", err)
-		ErrorResponse(gn, err) // agar bazaga saqlansamasa response=internalservererror
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		} // agar bazaga saqlansamasa response=internalservererror
 	}
-	response, err := client.Do(s)
+	response, err := handle.client.Do(s)
 	if err != nil {
-		ErrorResponse(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 		return
 	}
 	if response.StatusCode == 200 {
-		Ok(gn)
+		_, err := w.Write([]byte("Ok success "))
+		if err != nil {
+			return
+		}
 	} else {
-		ErrorResponse(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 	}
 }
 
 /* bu yerda deleted user qiladi */
 
-func (handle *Handler) DeleteUser(gn *gin.Context) {
+func (handle *Handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	id := strings.TrimPrefix(r.URL.Path, "/api/user/delete/")
+
 	//err := handle.UserRepo.DeleteUser(gn.Param("id"))
-	s, err := http.NewRequest(http.MethodDelete, fmt.Sprintf("http://localhost:8080/api/user/delete/%s", gn.Param("id")), nil)
+	s, err := http.NewRequest(http.MethodDelete, fmt.Sprintf("http://localhost:8080/api/user/delete/%s", id), nil)
 	if err != nil {
-		ErrorResponse(gn, err) // agar bazaga saqlansamasa response=internalservererror
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		} // agar bazaga saqlansamasa response=internalservererror
 	}
-	client := http.Client{}
-	response, err := client.Do(s)
+
+	response, err := handle.client.Do(s)
 	if err != nil {
-		ErrorResponse(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 		return
 	}
 	if response.StatusCode == 200 {
-		Ok(gn)
+		_, err := w.Write([]byte("Ok success "))
+		if err != nil {
+			return
+		}
 	} else {
-		ErrorResponse(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 	}
 }
 
 /* bu yerda filter va getAll user qiladi */
-func (handle *Handler) GetUser(gn *gin.Context) {
+func (handle *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 	userFilter := model.Filter{}
-	userFilter.Name = gn.Query("name")
-	userFilter.Email = gn.Query("email")
-	userFilter.Birthday = gn.Query("birthday")
-	userFilter.Password = gn.Query("password")
-	Limit, err := strconv.Atoi(gn.Query("limit"))
-	Offset, err := strconv.Atoi(gn.Query("offset"))
-	fmt.Println("-------------", gn.Query("offset"))
+	userFilter.Name = r.URL.Query().Get("name")
+	userFilter.Email = r.URL.Query().Get("email")
+	userFilter.Birthday = r.URL.Query().Get("birthday")
+	userFilter.Password = r.URL.Query().Get("password")
+	Limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
+	Offset, err := strconv.Atoi(r.URL.Query().Get("offset"))
+	fmt.Println("-------------", r.URL.Query().Get("offset"))
 	fmt.Println("-------------", Offset)
 	//err := gn.ShouldBindQuery(userFilter)
 
@@ -118,108 +166,145 @@ func (handle *Handler) GetUser(gn *gin.Context) {
 	userFilter.Offset = Offset
 	//userFilterJson, err := json.Marshal(&userFilter)
 	if err != nil {
-		BadRequest(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 		return
 	}
 	s, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://localhost:8080/api/user/get/?name=%s&email=%s&birthday=%s&password=%s&limit=%d&offset=%d", &userFilter.Name, userFilter.Email, &userFilter.Password, &userFilter.Limit, &userFilter.Offset), nil)
 	//users, err := handle.UserRepo.GetUser(userFilter)
 	if err != nil {
 		fmt.Println("+++++++++++", err)
-		ErrorResponse(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 
 	}
 	client := http.Client{}
 	response, err := client.Do(s)
 	if err != nil {
-		ErrorResponse(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 	}
 	if response.StatusCode == 200 {
 		users := []model.User{}
 		err = json.NewDecoder(response.Body).Decode(&users)
 		if err != nil {
-			ErrorResponse(gn, err)
+			_, err := w.Write([]byte("error internal server  error"))
+			if err != nil {
+				return
+			}
 			return
 		}
-		gn.JSON(200, gin.H{
-			"users": users,
-		})
+		json.NewEncoder(w).Encode(&users)
 	} else {
-		ErrorResponse(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 	}
 
 }
 
 /* bu yerda search user_id boyicha  user qiladi */
-func (handle *Handler) GetCourseByUserId(gn *gin.Context) {
-	s, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://localhost:8080/api/user/courses/%s", gn.Param("id")), nil)
+func (handle *Handler) GetCourseByUserId(w http.ResponseWriter, r *http.Request) {
+	id := strings.TrimPrefix(r.URL.Path, "/user/courses/")
+	s, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://localhost:8080/api/user/courses/%s", id), nil)
 	//userId, courses, err := handle.UserRepo.GetEnrollmentByCourseId(gn.Param("id"))
 	if err != nil {
 		fmt.Println("+++++++++++", err)
-		ErrorResponse(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 	}
-	client := http.Client{}
-	response, err := client.Do(s)
+	response, err := handle.client.Do(s)
 	if err != nil {
-		ErrorResponse(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 		return
 	}
 	if response.StatusCode == 200 {
 		courses := []model.Course{}
 		err = json.NewDecoder(response.Body).Decode(&courses)
 		if err != nil {
-			ErrorResponse(gn, err)
+			_, err := w.Write([]byte("error internal server  error"))
+			if err != nil {
+				return
+			}
 			return
 		}
-		gn.JSON(200, gin.H{
-			"courses": courses,
-		})
+		json.NewEncoder(w).Encode(&courses)
 	} else {
-		ErrorResponse(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 	}
 
 }
 
 /* bu yerda Email yoki Name boyicha qidiradi user qiladi */
 
-func (handle *Handler) GetUserByEmailOrName(gn *gin.Context) {
+func (handle *Handler) GetUserByEmailOrName(w http.ResponseWriter, r *http.Request) {
 	//users, err := handle.UserRepo.GetUserByEmailOrName(gn.Param("name"), gn.Param("email"))
-	s, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://localhost:8080/api/user/get/%s/%s", gn.Param("name"), gn.Param("email")), nil)
+	name := r.URL.Query().Get("name")
+	email := r.URL.Query().Get("email")
+	s, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://localhost:8080/api/user/get/%s/%s", name, email), nil)
 	if err != nil {
 		fmt.Println("+++++++++++", err)
-		ErrorResponse(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 	}
-	client := http.Client{}
-	response, err := client.Do(s)
+	response, err := handle.client.Do(s)
 	if err != nil {
-		ErrorResponse(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 		return
 	}
 	if response.StatusCode == 200 {
 		users := []model.User{}
 		err := json.NewDecoder(response.Body).Decode(&users)
 		if err != nil {
-			ErrorResponse(gn, err)
+			_, err := w.Write([]byte("error internal server  error"))
+			if err != nil {
+				return
+			}
 			return
 		}
-		gn.JSON(200, gin.H{
-			"users": users,
-		})
+		json.NewEncoder(w).Encode(&users)
 	} else {
-		ErrorResponse(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 	}
 }
 
 // user id boyich search qiladi
 
-func (handle *Handler) GetUserById(gn *gin.Context) {
+func (handle *Handler) GetUserById(w http.ResponseWriter, r *http.Request) {
 	//user, err := handle.UserRepo.GetById(gn.Param("id"))
-	s, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://localhost:8080/api/user/id/%s", gn.Param("id")), nil)
+	id := strings.TrimPrefix(r.URL.Path, "/api/user/id/")
+	s, err := http.NewRequest(http.MethodGet, fmt.Sprintf("http://localhost:8080/api/user/id/%s", id), nil)
 	if err != nil {
 		fmt.Println("+++++++++++", err)
-		ErrorResponse(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 	}
-	client := http.Client{}
-	response, err := client.Do(s)
+	response, err := handle.client.Do(s)
 	if err != nil {
 		return
 	}
@@ -227,14 +312,18 @@ func (handle *Handler) GetUserById(gn *gin.Context) {
 		users := []model.User{}
 		err = json.NewDecoder(response.Body).Decode(&users)
 		if err != nil {
-			ErrorResponse(gn, err)
+			_, err := w.Write([]byte("error internal server  error"))
+			if err != nil {
+				return
+			}
 			return
 		}
-		gn.JSON(200, gin.H{
-			"users": users,
-		})
+		json.NewEncoder(w).Encode(&users)
 	} else {
-		ErrorResponse(gn, err)
+		_, err := w.Write([]byte("error internal server  error"))
+		if err != nil {
+			return
+		}
 	}
 
 }

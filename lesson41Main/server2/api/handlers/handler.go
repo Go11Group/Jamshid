@@ -1,10 +1,9 @@
 package handlers
 
+import "net/http"
+
 type Handler struct {
-	//UserRepo       *postgres.UserRepository
-	//CourseRepo     *postgres.CourseRepository
-	//LessonRepo     *postgres.LessonRepository
-	//EnrollmentRepo *postgres.EnrollmentRepository
+	client *http.Client
 }
 
 //func NewHandler(user *postgres.UserRepository, course *postgres.CourseRepository, lesson *postgres.LessonRepository, enrollment *postgres.EnrollmentRepository) *Handler {
