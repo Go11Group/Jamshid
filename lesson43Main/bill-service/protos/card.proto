@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+
+package proto;
+option go_package = "/genProto";
+import "common.proto";
+
+
+message  CreateCardRequest{
+    string  Number =1;
+    string  UserId=2;
+
+}
+message UpdatedUserRequest{
+      string Id=1;
+      string  Number =2;
+      string  UserId=3;
+}
+
+message  CardFilterRequest {
+   string  Number=1;
+   string  UserId=2;
+   Filter LimitOffset=3;
+}
+message  CardResponse{
+    string  Id =1;
+    string  Number=2;
+    string  UserId=3;
+    string  CreatedAt=4;
+    string  UpdatedAt=5;
+    string  DeletedAt=6;
+}
+service  CardService{
+   rpc  CreateCard(CreateCardRequest)returns(Void);
+   rpc UpdateCard(UpdatedUserRequest)returns(Void);
+   rpc DeleteCard(ByIdRequest)returns(Void);
+   rpc GetCard(CardFilterRequest)returns(CardsResponse);
+}
+message  CardsResponse{
+    repeated  CardResponse CardsResponse=1;
+}
+

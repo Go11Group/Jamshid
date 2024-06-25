@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package  proto;
+option go_package = "genproto/product/";
+
+
+
+message UserCreateRequest {
+  string  Id =1;
+  string  Name=2;
+  string  Phone=3;
+  int32  Age=4;
+
+}
+message UserUpdatedRequest {
+  string  id=1;
+  string  name=2;
+  string  phone=3;
+  int32  age=4;
+}
+message Void {
+}
+
+message GetByIdRequest {
+  string  Id =1;
+}
+message  UserResponse{
+  string  Id =1;
+  string  Name=2;
+  string  Phone=3;
+  int32  Age=4;
+  string  CreatedAt=5;
+  string  UpdatedAt=6;
+  string  DeletedAt=7;
+}
+message  UserFilterRequest{
+  string  Name=2;
+  string  Phone=3;
+  int32  Age=4;
+  int32  limit=5;
+  int32 offset=6;
+}
+message Users {
+  repeated UserResponse Users=1;
+}
+message  UserAmount{
+  string userName=1;
+  string  amount=2;
+}
+message  UserDeposit{
+  string  UserName =1;
+  string  CardNumber=2;
+  int64  CardDeposit=3;
+
+}
+message  UserCredit{
+  string  UserName =1;
+  string  CardNumber=2;
+  int64  CardCredit=3;
+
+}
+message  UserCard {
+  string  UserName=1;
+  string CardNumber=2;
+}
+service UserService {
+  rpc  CreateUser(UserUpdatedRequest) returns(Void);
+  rpc UpdateUser(UserUpdatedRequest)returns(Void);
+  rpc DeleteUser(GetByIdRequest)returns(Void);
+  rpc GetUser(GetByIdRequest)returns(Users);
+  rpc GetUserCreditCard(GetByIdRequest)returns(UserCredit);
+  rpc GetUserDepositCard(GetByIdRequest)returns(UserDeposit);
+  rpc GetUserCard(GetByIdRequest)returns(UserCard);
+  rpc GetUserCardAmount(GetByIdRequest)returns(UserAmount);
+}
+

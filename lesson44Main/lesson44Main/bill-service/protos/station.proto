@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option go_package="/genproto";
+package proto;
+import "common.proto";
+
+
+message  CreateStationRequest{
+     string Name=1;
+}
+message UpdatedStationRequest{
+     string  Id =1;
+     string Name=2;
+}
+
+message  StationFilterRequest{
+    string  Name=1;
+    Filter LimitOffset=2;
+}
+message  StationResponse{
+    string  Id=1;
+    string  Name=2;
+    string  CreatedAt=3;
+    string  UpdatedAt=4;
+    int64  DeletedAt=5;
+}
+message  StationsResponse{
+  repeated  StationResponse StationsResponse=1;
+}
+service  StationService{
+   rpc CreateStation(CreateStationRequest)returns(Void);
+   rpc UpdatedStation(UpdatedStationRequest)returns(Void);
+   rpc DeleteStation(ByIdRequest)returns(Void);
+   rpc GetStation(StationFilterRequest)returns(StationsResponse);
+}

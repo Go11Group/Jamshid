@@ -1,0 +1,49 @@
+syntax="proto3";
+
+option go_package="/genProto";
+
+package proto;
+
+import  "common.proto";
+
+
+message  CreateTransactionRequest{
+    string CardId=1;
+    string  Amount=2;
+    string  TerminalId=3;
+    string  TransactionType=4;
+}
+message  UpdatedTransactionRequest{
+    string  id=1;
+    string CardId=2;
+    string  Amount=3;
+    string  TerminalId=4;
+    string  TransactionType=5;
+}
+message  TransactionFilterRequest{
+  string CardId=1;
+  string  Amount=2;
+  string  TerminalId=3;
+  string  TransactionType=4;
+  Filter LimitOffset=5;
+}
+message  TransactionResponse{
+   string  Id =1;
+   string  CardId=2;
+   string Amount=3;
+   string  TerminalId=4;
+   string  TransactionType=5;
+   string CreatedAt=6;
+   string  UpdatedAt=7;
+   int32 DeletedAt=8;
+
+}
+message  TransactionsResponse{
+  repeated  TransactionFilterRequest TransactionsResponse=1;
+}
+service  TransactionService{
+   rpc CreateTransaction(CreateTransactionRequest)returns(Void);
+   rpc UpdateTransaction(UpdatedTransactionRequest)returns(Void);
+   rpc DeleteTransaction(ByIdRequest)returns(Void);
+   rpc GetTransaction(TransactionFilterRequest)returns(TransactionsResponse);
+}
