@@ -1,0 +1,17 @@
+syntax="proto3";
+
+option  go_package="/genproto";
+
+
+package proto;
+
+message  Void {
+
+}
+message  Filter{
+  int32  Limit =1;
+  int32  Offset=2;
+}
+message  ByIdRequest{
+   string  Id=1;
+}
