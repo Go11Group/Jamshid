@@ -12,8 +12,7 @@ type Handler struct {
 
 func NewHandlerStruct(cl *grpc.ClientConn) *Handler {
 	return &Handler{
-		borrow: pb.NewBorrowServiceClient(cl),
-		user:   pb.NewUserServiceClient(cl),
-		book:   pb.NewLibraryServiceClient(cl),
+		transport: pb.NewTransportServiceClient(cl),
+		weather:   pb.NewWheatherServiceClient(cl),
 	}
 }
