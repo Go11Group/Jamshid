@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+option go_package = "/genproto/WheatherService";
+
+package proto;
+
+import "google/protobuf/timestamp.proto";
+
+service WheatherService{
+  rpc GetCurrentWeather(CurrentWheatherRequest) returns (CurrentWheatherResponse);
+  rpc GetWeatherForecast(ForecastWheatherRequest) returns (ForecastWheatherResponse);
+  rpc ReportWeatherCondition(ReportWheatherRequest) returns (ReportWheatherResponse);
+}
+
+message CurrentWheatherRequest{
+  string City = 1;
+}
+
+message CurrentWheatherResponse{
+  google.protobuf.Timestamp LocalTime = 1;
+  string Country = 2;
+  float TempC = 3;
+  float WindKmph = 4;
+  int32 Humidity = 5;
+}
+
+message ForecastWheatherRequest{
+  string City = 1;
+  int32 Days = 2;
+}
+
+message ForecastWheatherResponse{
+  repeated Forecast Days= 1;
+}
+
+message Forecast{
+  string City = 1;
+  google.protobuf.Timestamp LocalTime = 2;
+  string Country = 3;
+  float TempC = 4;
+  float WindKmph = 5;
+  int32 Humidity = 6;
+}
+
+message ReportWheatherRequest {
+  string City = 1;
+  google.protobuf.Timestamp LocalTime = 2;
+  string Country = 3;
+  float TempC = 4;
+  float WindKmph = 5;
+  int32 Humidity = 6;
+}
+
+message ReportWheatherResponse{
+  bool IsReported = 1;
+}

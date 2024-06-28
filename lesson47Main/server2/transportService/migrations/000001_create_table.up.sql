@@ -1,0 +1,1 @@
+create table transports(bus_number int,  stations varchar[]);
