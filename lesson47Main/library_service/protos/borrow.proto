@@ -1,0 +1,40 @@
+syntax="proto3";
+
+option  go_package="/genproto";
+
+
+package proto;
+
+import "common.proto";
+message CreateBorrowRequest{
+  string Userid =1;
+  string BookId=2;
+}
+message UpdatedBorrowRequest{
+  string Id=1;
+  string Userid =2;
+  string BookId=3;
+}
+message BorrowResponse{
+  string Id =1;
+  string Userid =2;
+  string BookId=3;
+  string  CreatedAt=4;
+  string  UpdatedAt=5;
+  string  DeletedAt=6;
+}
+message   BorrowFilterRequest{
+  string Userid =1;
+  string BookId=2;
+  Filter LimitOffset=3;
+
+}
+message  BorrowsResponse{
+  repeated BorrowResponse BorrowsResponse=1;
+}
+service BorrowService{
+  rpc CreateBorrow(CreateBorrowRequest)returns(Void);
+  rpc UpdateBorrow(UpdatedBorrowRequest)returns(Void);
+  rpc DeleteBorrow(ByIdRequest)returns(Void);
+  rpc GetBorrow(BorrowFilterRequest)returns(BorrowsResponse);
+}

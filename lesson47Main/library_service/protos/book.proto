@@ -1,0 +1,44 @@
+syntax="proto3";
+
+option  go_package="/genproto";
+
+
+package proto;
+
+import "common.proto";
+message CreateBookRequest{
+  string  Title=1;
+  string  Author=2;
+  int32 Published=3;
+}
+message UpdatedBookRequest{
+  string id=1;
+  string  Title=2;
+  string  Author=3;
+  int32 Published=4;
+}
+message BookResponse{
+  string Id =1;
+  string  Title=2;
+  string  Author=3;
+  int32 Published=4;
+  string  CreatedAt=5;
+  string  UpdatedAt=6;
+  string  DeletedAt=7;
+}
+message   BookFilterRequest{
+  string  Title=2;
+  string  Author=3;
+  int32 Published=4;
+  Filter LimitOffset=5;
+
+}
+message  BooksResponse{
+  repeated BookResponse BooksResponse=1;
+}
+service LibraryService{
+  rpc CreateBook(CreateBookRequest)returns(Void);
+  rpc UpdateBook(UpdatedBookRequest)returns(Void);
+  rpc DeleteBook(ByIdRequest)returns(Void);
+  rpc GetBook(BookFilterRequest)returns(BooksResponse);
+}
